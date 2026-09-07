@@ -2,7 +2,7 @@
 
 import { SubmitEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { fetchPolicies, registerClaim } from "@/lib/api";
+import { fetchPolicies, getErrorMessage, registerClaim } from "@/lib/api";
 import { Policy } from "@/lib/types";
 
 const CURRENCIES = ["USD", "GBP", "EUR", "GHS", "CAD"];
@@ -54,10 +54,7 @@ export function ClaimForm() {
             });
             router.push(`/claims/${claim.id}`);
         } catch (err) {
-            const message =
-                (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??
-                "Couldn't register that claim. Check the policy number exists.";
-            setError(message);
+            setError(getErrorMessage(err, "Couldn't register that claim. Check the policy number exists."));
         } finally {
             setSubmitting(false);
         }

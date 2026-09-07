@@ -44,3 +44,31 @@ export async function approveClaim(claimId: string, approvedAmount: number): Pro
     const { data } = await api.patch<Claim>(`/api/claims/${claimId}/approve`, { approvedAmount });
     return data;
 }
+
+export function getErrorMessage(err: unknown, fallback: string): string {
+    const data = (err as { response?: { data?: unknown } })?.response?.data;
+    if (!data || typeof data !== "object") return fallback;
+
+    const d = data as { message?: string; errors?: unknown; title?: string };
+
+    if (typeof d.message === "string" && d.message.trim()) {
+        return d.message;
+    }
+
+    if (d.errors && typeof d.errors === "object") {
+        if (Array.isArray(d.errors)) {
+            if (typeof d.errors[0] === "string") return d.errors[0];
+        } else {
+            const firstField = Object.values(d.errors as Record<string, unknown>)[0];
+            if (Array.isArray(firstField) && typeof firstField[0] === "string") {
+                return firstField[0];
+            }
+        }
+    }
+
+    if (typeof d.title === "string" && d.title.trim()) {
+        return d.title;
+    }
+
+    return fallback;
+}

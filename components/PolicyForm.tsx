@@ -1,6 +1,6 @@
 "use client";
 
-import { registerPolicy } from "@/lib/api";
+import { getErrorMessage, registerPolicy } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { SubmitEvent, useState } from "react";
 
@@ -23,10 +23,7 @@ export function PolicyForm() {
             await registerPolicy({ policyNumber, insuredName, startDate, endDate });
             router.push("/claims/new");
         } catch (err) {
-            const message =
-                (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??
-                "Couldn't register that policy. The number may already be in use.";
-            setError(message);
+            setError(getErrorMessage(err, "Couldn't register that policy. The number may already be in use."));
         } finally {
             setSubmitting(false);
         }

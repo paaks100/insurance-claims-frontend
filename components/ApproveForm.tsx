@@ -2,7 +2,7 @@
 
 import { useState, SubmitEvent } from "react";
 import { useRouter } from "next/navigation";
-import { approveClaim } from "@/lib/api";
+import { approveClaim, getErrorMessage } from "@/lib/api";
 
 const inputClass =
     "border border-[#E2E5EA] px-2 py-1.5 text-[14px] text-[#1B2430] focus:outline-none focus:ring-2 focus:ring-[#2E5EAA]";
@@ -22,10 +22,7 @@ export function ApproveForm({ claimId }: { claimId: string }) {
             router.refresh();
             setAmount("");
         } catch (err) {
-            const message =
-                (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??
-                "Couldn't approve the claim. Please try again.";
-            setError(message);
+            setError(getErrorMessage(err, "Couldn't approve the claim. Please try again."));
         } finally {
             setSubmitting(false);
         }

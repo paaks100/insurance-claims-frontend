@@ -2,7 +2,7 @@
 
 import { useState, SubmitEvent } from "react";
 import { useRouter } from "next/navigation";
-import { recordPayment } from "@/lib/api";
+import { getErrorMessage, recordPayment } from "@/lib/api";
 
 const inputClass =
     "border border-[#E2E5EA] px-2 py-1.5 text-[14px] text-[#1B2430] focus:outline-none focus:ring-2 focus:ring-[#2E5EAA]";
@@ -38,10 +38,7 @@ export function PaymentForm({ claimId, claimCurrency }: { claimId: string; claim
             setAmount("");
             setRate("1");
         } catch (err) {
-            const message =
-                (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??
-                "Couldn't record that payment. Check the amount against the outstanding balance.";
-            setError(message);
+            setError(getErrorMessage(err, "Couldn't record that payment. Check the amount against the outstanding balance."));
         } finally {
             setSubmitting(false);
         }
