@@ -20,6 +20,7 @@ export function ClaimsTable({ claims }: { claims: Claim[] }) {
                     <th className="px-5 py-3 font-medium">Claim Number</th>
                     <th className="px-5 py-3 font-medium">Policy Number</th>
                     <th className="px-5 py-3 font-medium">Loss date</th>
+                    <th className="px-5 py-3 font-medium">Date Notified</th>
                     <th className="px-5 py-3 font-medium">Status</th>
                     <th className="px-5 py-3 text-right font-medium">Approved</th>
                     <th className="px-5 py-3 text-right font-medium">Paid</th>
@@ -38,6 +39,9 @@ export function ClaimsTable({ claims }: { claims: Claim[] }) {
                         <td className="px-5 py-3 text-[#1B2430]">{c.policy.policyNumber}</td>
                         <td className="px-5 py-3 font-mono text-[#1B2430]">
                             {formatDate(c.lossDate)}
+                        </td>
+                        <td className="px-5 py-3 font-mono text-[#1B2430]">
+                            {formatDate(c.dateNotified)}
                         </td>
                         <td className="px-5 py-3">
                             <StatusPill status={c.status} />
